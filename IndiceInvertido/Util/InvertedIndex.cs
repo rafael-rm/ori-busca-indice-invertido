@@ -31,7 +31,7 @@ public class InvertedIndex
         return Task.CompletedTask;
     }
 
-    public async Task<List<string>> Search(string query)
+    public async Task StartIndex()
     {
         if (_invertedIndex is null)
         {
@@ -43,7 +43,12 @@ public class InvertedIndex
             
             await GenerateInvertedIndex(textTreated);
         }
+    }
 
+    public async Task<List<string>> Search(string query)
+    {
+        await StartIndex();
+        
         string[] terms = query.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         List<string> result = new List<string>();
 

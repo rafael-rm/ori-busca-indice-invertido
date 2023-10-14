@@ -1,6 +1,39 @@
 ﻿@{
-    ViewData["Authors"] = "Autores";
+    ViewData["Title"] = "Autores";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body.authors-list {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        h1.authors-list {
+            color: #333;
+        }
+        ul.authors-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul.authors-list li {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>@ViewData["Title"]</h1>
+
+    <ul class="authors-list">
+        <li>Rafael Rodrigues Monteiro</li>
+        <li>Guilherme Rodrigues Santos</li>
+        <li>Livia Luiz Vicente Araujo</li>
+        <li>Pedro Henrique de Souza Silva</li>
+        <li>Pedro Henrique Ramires de Faria</li>
+    </ul>
+</body>
+</html>
