@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using StopWord;
 
@@ -10,7 +11,7 @@ public class InvertedIndex
 {
     private Dictionary<string, HashSet<string>>? _invertedIndex;
 
-    public Task GenerateInvertedIndex(Dictionary<string, string> documents)
+    public static Task<Dictionary<string, HashSet<string>>> GenerateInvertedIndex(Dictionary<string, string> documents)
     {
         var invertedIndex = new Dictionary<string, HashSet<string>>();
 
@@ -27,8 +28,7 @@ public class InvertedIndex
             }
         }
 
-        _invertedIndex = invertedIndex;
-        return Task.CompletedTask;
+        return Task.FromResult(invertedIndex);
     }
 
     public async Task StartIndex()
@@ -37,12 +37,48 @@ public class InvertedIndex
         {
             string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
         
-            string pathFolderHtmls = projectDirectory + "\\IndiceInvertido\\Data\\htmlFiles";
+            string pathIndex = projectDirectory + "\\IndiceInvertido\\Data\\index.json";
             
-            Dictionary<string, string> textTreated = await GetTreatedTextFiles(pathFolderHtmls);
-            
-            await GenerateInvertedIndex(textTreated);
+            if (!File.Exists(pathIndex))
+            {
+                await SaveIndexDisk();
+            }
+
+            _invertedIndex = await ReadInvertedIndexFromDisk();
         }
+    }
+
+    public static async Task SaveIndexDisk()
+    {
+        string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
+
+        string pathFolderHtmls = projectDirectory + "\\IndiceInvertido\\Data\\htmlFiles";
+        string pathFolderIndex = projectDirectory + "\\IndiceInvertido\\Data\\";
+
+        Dictionary<string, string> textTreated = await GetTreatedTextFiles(pathFolderHtmls);
+        Dictionary<string, HashSet<string>> invertedIndex = await GenerateInvertedIndex(textTreated);
+        
+        string indexPath = Path.Combine(pathFolderIndex, "invertedIndex.json");
+        string json = JsonSerializer.Serialize(invertedIndex);
+        
+        await File.WriteAllTextAsync(indexPath, json);
+    }
+    
+    public static async Task<Dictionary<string, HashSet<string>>> ReadInvertedIndexFromDisk()
+    {
+        string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
+        string pathFolderIndex = projectDirectory + "\\IndiceInvertido\\Data\\invertedIndex.json";
+        
+        if (!File.Exists(pathFolderIndex))
+        {
+            await SaveIndexDisk();
+        }
+        
+        string json = await File.ReadAllTextAsync(pathFolderIndex);
+        
+        Dictionary<string, HashSet<string>> invertedIndex = JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(json);
+
+        return invertedIndex;
     }
 
     public async Task<List<string>> Search(string query)

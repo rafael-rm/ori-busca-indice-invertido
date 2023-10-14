@@ -21,11 +21,16 @@
         <button class="btn btn-success" onclick="addOperator('OR')">OR</button>
         <button class="btn btn-success" onclick="addOperator('NOT')">NOT</button>
     </div>
+
+    <div class="mt-3">
+        <button class="btn btn-danger" id="resetIndexButton">Resetar Index</button>
+    </div>
 </div>
 
 <script>
     let previousValue = "";
     const searchBox = document.getElementById('searchBox');
+    const resetIndexButton = document.getElementById('resetIndexButton');
 
     searchBox.addEventListener('input', function () {
         const currentValue = searchBox.value;
@@ -47,4 +52,10 @@
             searchBox.value = newValue;
         }
     }
+
+    resetIndexButton.addEventListener('click', function () {
+        fetch('/Search/ResetIndex', {
+            method: 'GET',
+        })
+    });
 </script>

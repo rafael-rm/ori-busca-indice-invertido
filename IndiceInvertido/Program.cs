@@ -21,11 +21,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
+
+app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Search}/{action=Index}/{id?}");
-});
+        pattern: "{controller=Search}/{action=StartPage}");
+
 
 app.Run();

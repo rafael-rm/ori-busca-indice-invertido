@@ -10,7 +10,7 @@ public class SearchController : Controller
 {
     private readonly ILogger<SearchController> _logger;
 
-    private static InvertedIndex? _invertedIndex;
+    private static InvertedIndex? _indexInstance;
 
     public SearchController(ILogger<SearchController> logger)
     {
@@ -18,7 +18,7 @@ public class SearchController : Controller
     }
     
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult StartPage()
     {
         return View();
     }
@@ -32,10 +32,10 @@ public class SearchController : Controller
     [HttpGet("SearchResult")]
     public async Task<IActionResult> SearchResult(string query)
     {
-        if (_invertedIndex is null)
-            _invertedIndex = new InvertedIndex();
+        if (_indexInstance is null)
+            _indexInstance = new InvertedIndex();
 
-        List<string> result = await _invertedIndex.Search(query);
+        List<string> result = await _indexInstance.Search(query);
         
         return View(result);
     }
@@ -54,5 +54,14 @@ public class SearchController : Controller
         
         string fileHtml = System.IO.File.ReadAllText(filePath, Encoding.GetEncoding(1252));
         return Content(fileHtml, "text/html");
+    }
+    
+    public IActionResult ResetIndex()
+    {
+        _indexInstance = null;
+        string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
+        string pathFolderIndex = projectDirectory + "\\IndiceInvertido\\Data\\invertedIndex.json";
+        System.IO.File.Delete(pathFolderIndex);
+        return Ok();
     }
 }
