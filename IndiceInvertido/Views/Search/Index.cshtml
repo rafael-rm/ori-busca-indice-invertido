@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Página inicial";
+}
+
+<div class="text-center">
+    <h1 class="display-4">UEMG Search</h1>
+</div>
+
+<div class="text-center">
+    <form method="get" action="SearchResult">
+        <div class="input-group">
+            <input type="text" class="form-control" name="query" id="searchBox" placeholder="Pesquisar..." />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Pesquisar</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-3">
+        <button class="btn btn-secondary" onclick="addOperator('AND')">AND</button>
+        <button class="btn btn-secondary" onclick="addOperator('OR')">OR</button>
+        <button class="btn btn-secondary" onclick="addOperator('NOT')">NOT</button>
+    </div>
+</div>
+
+<script>
+    let previousValue = "";
+    const searchBox = document.getElementById('searchBox');
+
+    searchBox.addEventListener('input', function () {
+        const currentValue = searchBox.value;
+        if (currentValue !== previousValue) {
+            removeDoubleSpaces();
+            previousValue = currentValue;
+        }
+    });
+
+    function addOperator(operator) {
+        const currentValue = searchBox.value;
+        searchBox.value = currentValue + ` ${operator} `;
+    }
+
+    function removeDoubleSpaces() {
+        const currentValue = searchBox.value;
+        const newValue = currentValue.replace(/ {2,}/g, ' ');
+        if (currentValue !== newValue) {
+            searchBox.value = newValue;
+        }
+    }
+</script>

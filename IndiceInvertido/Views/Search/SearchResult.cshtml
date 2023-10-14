@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Search"] = "Resultados";
+}
+
+@model List<string>
+
+<h2>Resultados da Pesquisa</h2>
+
+<ul>
+    @foreach (var result in Model)
+    {
+        <li>@result</li>
+    }
+</ul>
+
+<a href="javascript:history.go(-1);" class="btn btn-primary">Voltar</a>
