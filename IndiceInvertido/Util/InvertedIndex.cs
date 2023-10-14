@@ -37,7 +37,7 @@ public class InvertedIndex
         {
             string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
         
-            string pathFolderHtmls = projectDirectory + "/IndiceInvertido/Data/htmlFiles";
+            string pathFolderHtmls = projectDirectory + "\\IndiceInvertido\\Data\\htmlFiles";
             
             Dictionary<string, string> textTreated = await GetTreatedTextFiles(pathFolderHtmls);
             
