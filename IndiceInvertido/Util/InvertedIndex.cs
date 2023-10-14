@@ -8,11 +8,11 @@ namespace IndiceInvertido.Util;
 
 public class InvertedIndex
 {
-    private Dictionary<string, List<string>>? _invertedIndex;
+    private Dictionary<string, HashSet<string>>? _invertedIndex;
 
     public Task GenerateInvertedIndex(Dictionary<string, string> documents)
     {
-        var invertedIndex = new Dictionary<string, List<string>>();
+        var invertedIndex = new Dictionary<string, HashSet<string>>();
 
         foreach (var document in documents)
         {
@@ -21,7 +21,7 @@ public class InvertedIndex
             foreach (var word in words)
             {
                 if (!invertedIndex.ContainsKey(word))
-                    invertedIndex[word] = new List<string>();
+                    invertedIndex[word] = new HashSet<string>();
 
                 invertedIndex[word].Add(document.Key);
             }
@@ -50,28 +50,32 @@ public class InvertedIndex
         await StartIndex();
         
         string[] terms = query.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        List<string> result = new List<string>();
+        var result = new List<string>();
 
-        foreach (string term in terms)
+        for (var i = 0; i < terms.Length; i++)
         {
+            var term = terms[i];
             if (term.Equals("and", StringComparison.OrdinalIgnoreCase))
             {
-                result = Intersect(result, await Search(terms[Array.IndexOf(terms, term) - 1]));
+                result = Intersect(result, await Search(terms[Array.IndexOf(terms, term) + 1]));
+                i++;
             }
             else if (term.Equals("or", StringComparison.OrdinalIgnoreCase))
             {
-                result = Union(result, await Search(terms[Array.IndexOf(terms, term) - 1]));
+                result = Union(result, await Search(terms[Array.IndexOf(terms, term) + 1]));
+                i++;
             }
             else if (term.Equals("not", StringComparison.OrdinalIgnoreCase))
             {
                 result = Difference(result, await Search(terms[Array.IndexOf(terms, term) + 1]));
+                i++;
             }
             else
             {
-                List<string> termResults;
+                HashSet<string> termResults;
                 if (_invertedIndex.TryGetValue(term, out termResults))
                 {
-                    result = result.Count == 0 ? termResults : Intersect(result, termResults);
+                    result = result.Count == 0 ? termResults.ToList() : Intersect(result, termResults);
                 }
                 else
                 {
@@ -83,17 +87,17 @@ public class InvertedIndex
         return result;
     }
 
-    private List<string> Intersect(List<string> list1, List<string> list2)
+    private List<string> Intersect(IEnumerable<string> list1, IEnumerable<string> list2)
     {
         return list1.Intersect(list2).ToList();
     }
 
-    private List<string> Union(List<string> list1, List<string> list2)
+    private List<string> Union(IEnumerable<string> list1, IEnumerable<string> list2)
     {
         return list1.Union(list2).ToList();
     }
 
-    private List<string> Difference(List<string> list1, List<string> list2)
+    private List<string> Difference(IEnumerable<string> list1, IEnumerable<string> list2)
     {
         return list1.Except(list2).ToList();
     }
