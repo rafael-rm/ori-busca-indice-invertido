@@ -9,8 +9,22 @@
 <ul>
     @foreach (var result in Model)
     {
-        <li>@result</li>
+        <li>
+            <a href="javascript:void(0);" class="open-html" data-filename="@result">@result</a>
+        </li>
     }
 </ul>
 
+<p>Total de resultados: @Model.Count</p>
+
 <a href="javascript:history.go(-1);" class="btn btn-primary">Voltar</a>
+
+<script>
+    document.querySelectorAll('.open-html').forEach(function(link) {
+        link.addEventListener('click', function() {
+            var fileName = this.getAttribute('data-filename');
+            var url = '/Search/OpenHtml?fileName=' + fileName;
+            window.open(url, '_blank');
+        });
+    });
+</script>

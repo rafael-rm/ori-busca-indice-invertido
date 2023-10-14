@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using IndiceInvertido.Models;
 using IndiceInvertido.Util;
@@ -43,5 +44,15 @@ public class SearchController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+    
+    public IActionResult OpenHtml(string fileName)
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        string path = $"{Directory.GetParent(Environment.CurrentDirectory)?.FullName}\\IndiceInvertido\\Data\\htmlFiles";
+        string filePath = Path.Combine(path, fileName);
+        
+        string fileHtml = System.IO.File.ReadAllText(filePath, Encoding.GetEncoding(1252));
+        return Content(fileHtml, "text/html");
     }
 }
