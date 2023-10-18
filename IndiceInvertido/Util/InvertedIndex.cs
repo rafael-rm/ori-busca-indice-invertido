@@ -59,7 +59,8 @@ public class InvertedIndex
         Dictionary<string, HashSet<string>> invertedIndex = await GenerateInvertedIndex(textTreated);
         
         string indexPath = Path.Combine(pathFolderIndex, "invertedIndex.json");
-        string json = JsonSerializer.Serialize(invertedIndex);
+        JsonSerializerOptions jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(invertedIndex, jsonOptions);
         
         await File.WriteAllTextAsync(indexPath, json);
     }

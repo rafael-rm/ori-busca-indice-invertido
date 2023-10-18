@@ -56,12 +56,13 @@ public class SearchController : Controller
         return Content(fileHtml, "text/html");
     }
     
-    public IActionResult ResetIndex()
+    public async Task<IActionResult> ResetIndex()
     {
-        _indexInstance = null;
+        _indexInstance = new InvertedIndex();
         string? projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
         string pathFolderIndex = projectDirectory + "\\IndiceInvertido\\Data\\invertedIndex.json";
         System.IO.File.Delete(pathFolderIndex);
+        await _indexInstance.StartIndex();
         return Ok();
     }
 }
