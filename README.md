@@ -5,10 +5,11 @@ Mecanismo de Busca de Índice Invertido em ASP.NET Core Web App para a Disciplin
 
 ## Funcionalidades
 
-- Geração de indexes a partir de arquivos HTML.
 - Busca através de operaçõs AND OR NOT.
-- Opção para resetar os indexes e carrega-los novamente.
-- Visualização do arquivo HTML encontrado nas busca.
+- Geração de indexes a partir de arquivos HTML.
+- Indexes gerados salvos em armazenamento não volátil.
+- Opção para resetar os indexes e gera-los novamente.
+- Visualização dos arquivos HTMLs encontrados na busca.
 
 ## Screenshots
 
