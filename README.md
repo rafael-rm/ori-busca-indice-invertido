@@ -1,7 +1,7 @@
 
 # Busca de indice invertido
 
-Mecanismo de Busca de Índice Invertido em ASP.NET Core Web App para a Disciplina de Recuperação da Informação (ORI).
+Mecanismo de Busca de Índice Invertido em ASP.NET Core Web App para a Disciplina de Organização e Recuperação da Informação (ORI).
 
 ## Funcionalidades
 
